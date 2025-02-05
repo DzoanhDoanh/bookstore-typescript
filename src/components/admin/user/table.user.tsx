@@ -6,6 +6,7 @@ import { ProTable } from '@ant-design/pro-components';
 import { Button } from 'antd';
 import { useRef, useState } from 'react';
 import DetailUser from './detail.user';
+import CreateUser from './create.user';
 
 type TSearch = {
     fullName: string;
@@ -17,6 +18,7 @@ const TableUser = () => {
     const actionRef = useRef<ActionType>();
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IUser | null>(null);
+    const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
 
     const columns: ProColumns<IUser>[] = [
         {
@@ -89,6 +91,10 @@ const TableUser = () => {
             },
         },
     ];
+
+    const refreshTable = () => {
+        actionRef.current?.reload();
+    };
     return (
         <>
             <ProTable<IUser, TSearch>
@@ -136,7 +142,7 @@ const TableUser = () => {
                         key="button"
                         icon={<PlusOutlined />}
                         onClick={() => {
-                            actionRef.current?.reload();
+                            setOpenModalCreate(true);
                         }}
                         type="primary"
                     >
@@ -144,12 +150,13 @@ const TableUser = () => {
                     </Button>,
                 ]}
             />
-            <DetailUser 
+            <DetailUser
                 openViewDetail={openViewDetail}
-                setOpenViewDetail = {setOpenViewDetail}
+                setOpenViewDetail={setOpenViewDetail}
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
             />
+            <CreateUser openModalCreate={openModalCreate} setOpenModalCreate={setOpenModalCreate} refreshTable={refreshTable}/>
         </>
     );
 };
