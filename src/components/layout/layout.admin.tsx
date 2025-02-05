@@ -14,7 +14,7 @@ import { Outlet } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { useCurrentApp } from '../context/app.context';
 import type { MenuProps } from 'antd';
-import urlAvatar from '../../assets/user.png';
+
 type MenuItem = Required<MenuProps>['items'][number];
 
 const { Content, Footer, Sider } = Layout;
@@ -121,7 +121,7 @@ const LayoutAdmin = () => {
                         {isAuthenticated === true ? (
                             <Dropdown menu={{ items: itemsDropdown }} trigger={['click']}>
                                 <Space style={{ cursor: 'pointer' }}>
-                                    <Avatar src={urlAvatar} />
+                                    <Avatar src={`http://localhost:5173/src/assets/images/${user?.avatar}`} />
                                     {user?.fullName}
                                 </Space>
                             </Dropdown>

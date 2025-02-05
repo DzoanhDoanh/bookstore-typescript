@@ -25,6 +25,7 @@ declare global {
             role: string;
             avatar: string;
             id: string;
+            createAt: string;
         };
     }
 
@@ -35,5 +36,6 @@ declare global {
         role: string;
         avatar: string;
         id: string;
+        createAt: string;
     }
 }

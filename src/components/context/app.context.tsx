@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { HashLoader } from 'react-spinners';
-import { getUserById } from '../../services/api';
+import { getUserByIdApi } from '../../services/api';
 interface IAppContext {
     isAuthenticated: boolean;
     setIsAuthenticated: (v: boolean) => void;
@@ -31,7 +31,7 @@ export const AppProvider = (props: TProps) => {
             const token = localStorage.getItem('accessToken');
             if (token) {
                 const decoded: DecodedToken = jwtDecode(token);
-                const res = await getUserById(decoded.sub);
+                const res = await getUserByIdApi(decoded.sub);
                 if (res.data) {
                     setUser(res.data);
                     setIsAuthenticated(true);

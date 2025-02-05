@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router';
 import './app.header.scss';
 import { Link } from 'react-router-dom';
 import { useCurrentApp } from 'components/context/app.context';
-import avatar from '../../assets/user.png';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
 const AppHeader = (props: any) => {
@@ -146,7 +145,7 @@ const AppHeader = (props: any) => {
                                 ) : (
                                     <Dropdown menu={{ items }} trigger={['click']}>
                                         <Space>
-                                            <Avatar src={avatar} />
+                                            <Avatar src={`http://localhost:5173/src/assets/images/${user?.avatar}`} />
                                             {user?.fullName}
                                         </Space>
                                     </Dropdown>
