@@ -37,5 +37,6 @@ declare global {
         avatar: string;
         id: string;
         createAt: string;
+        originalPass?: string;
     }
 }

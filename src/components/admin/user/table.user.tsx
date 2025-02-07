@@ -1,12 +1,16 @@
-import { getUsersApi } from '@/services/api';
+import { deleteUserApi, getUsersApi } from '@/services/api';
 // import { dateRangeValidate } from '@/services/helper';
-import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
+import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
-import { Button } from 'antd';
+import { App, Button, Popconfirm } from 'antd';
 import { useRef, useState } from 'react';
 import DetailUser from './detail.user';
 import CreateUser from './create.user';
+import ImportUser from './data/import.user';
+import { CSVLink } from 'react-csv';
+import UpdateUser from './update.user';
+import dayjs from 'dayjs';
 
 type TSearch = {
     fullName: string;
@@ -19,7 +23,33 @@ const TableUser = () => {
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IUser | null>(null);
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+    const [openModalImport, setOpenModalImport] = useState<boolean>(false);
+    const [currentDataTable, setCurrentDataTable] = useState<IUser[]>([]);
+    const [dataUpdate, setDataUpdate] = useState<IUser | null>(null);
+    const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
+    const [isDeleteUser, setIsDeleteUser] = useState<boolean>(false);
+    const { message, notification } = App.useApp();
 
+    const handleDeleteUser = async (id: string) => {
+        // setIsDeleteUser(false);
+        const res = await deleteUserApi(id);
+        console.log(res);
+        setTimeout(() => {
+            if (res && res.data && typeof res.data === 'string') {
+                const alertMessage = res.data + '';
+                notification.error({
+                    message: 'Has an error!',
+                    description: alertMessage,
+                });
+                setIsDeleteUser(true);
+                return;
+            } else {
+                message.success('Delete user success!');
+                setIsDeleteUser(false);
+                refreshTable();
+            }
+        }, 500);
+    };
     const columns: ProColumns<IUser>[] = [
         {
             dataIndex: 'index',
@@ -69,6 +99,9 @@ const TableUser = () => {
             dataIndex: 'createAt',
             valueType: 'date',
             hideInSearch: true,
+            render(dom, entity) {
+                return <>{dayjs(entity.createAt).format('DD-MM-YYYY')}</>;
+            },
         },
         {
             title: 'Create At',
@@ -81,11 +114,30 @@ const TableUser = () => {
         {
             title: 'Action',
             hideInSearch: true,
-            render() {
+            render(dom, entity) {
                 return (
                     <>
-                        <EditTwoTone twoToneColor={'#f57800'} style={{ cursor: 'pointer', marginRight: 15 }} />
-                        <DeleteTwoTone twoToneColor={'#ff4d4f'} style={{ cursor: 'pointer' }} />
+                        <EditTwoTone
+                            twoToneColor={'#f57800'}
+                            style={{ cursor: 'pointer', marginRight: 15 }}
+                            onClick={() => {
+                                setDataUpdate(entity);
+                                setOpenModalUpdate(true);
+                            }}
+                        />
+                        <Popconfirm
+                            placement="leftTop"
+                            title={'Delete user'}
+                            description="Are you sure to delete this user?"
+                            onConfirm={() => handleDeleteUser(entity.id)}
+                            okText="Confirm"
+                            cancelText="Cancel"
+                            okButtonProps={{ loading: isDeleteUser }}
+                        >
+                            <span style={{ cursor: 'pointer', marginLeft: '20px' }}>
+                                <DeleteTwoTone twoToneColor={'#ff4d4f'} style={{ cursor: 'pointer' }} />
+                            </span>
+                        </Popconfirm>
                     </>
                 );
             },
@@ -123,7 +175,9 @@ const TableUser = () => {
                         query += `&_sort=id&_order=${sortBy}`;
                     }
                     const allUser = await getUsersApi(query);
-
+                    if (allUser && typeof allUser.data !== 'string') {
+                        setCurrentDataTable(allUser.data);
+                    }
                     return {
                         data: allUser.data,
                         page: 1,
@@ -138,6 +192,20 @@ const TableUser = () => {
                 }}
                 headerTitle="Table user"
                 toolBarRender={() => [
+                    <Button icon={<ExportOutlined />} type="primary">
+                        <CSVLink data={currentDataTable} filename="export-user.csv">
+                            Export
+                        </CSVLink>
+                    </Button>,
+                    <Button
+                        icon={<CloudUploadOutlined />}
+                        type="primary"
+                        onClick={() => {
+                            setOpenModalImport(true);
+                        }}
+                    >
+                        Import
+                    </Button>,
                     <Button
                         key="button"
                         icon={<PlusOutlined />}
@@ -156,7 +224,19 @@ const TableUser = () => {
                 dataViewDetail={dataViewDetail}
                 setDataViewDetail={setDataViewDetail}
             />
-            <CreateUser openModalCreate={openModalCreate} setOpenModalCreate={setOpenModalCreate} refreshTable={refreshTable}/>
+            <CreateUser
+                openModalCreate={openModalCreate}
+                setOpenModalCreate={setOpenModalCreate}
+                refreshTable={refreshTable}
+            />
+            <ImportUser openModalImport={openModalImport} setOpenModalImport={setOpenModalImport} />
+            <UpdateUser
+                openModalUpdate={openModalUpdate}
+                setOpenModalUpdate={setOpenModalUpdate}
+                refreshTable={refreshTable}
+                setDataUpdate={setDataUpdate}
+                dataUpdate={dataUpdate}
+            />
         </>
     );
 };

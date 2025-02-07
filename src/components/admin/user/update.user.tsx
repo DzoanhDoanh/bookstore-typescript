@@ -1,33 +1,51 @@
-import { registerApi } from '@/services/api';
-import { App, Divider, Form, Modal, Input, Select } from 'antd';
+import { useEffect, useState } from 'react';
+import { App, Divider, Form, Input, Modal, Select } from 'antd';
 import type { FormProps } from 'antd';
-import { useState } from 'react';
+import { updateUserApi } from '@/services/api';
 import { Rule } from 'antd/es/form';
 
 interface IProps {
-    openModalCreate: boolean;
-    setOpenModalCreate: (v: boolean) => void;
+    openModalUpdate: boolean;
+    setOpenModalUpdate: (v: boolean) => void;
     refreshTable: () => void;
+    setDataUpdate: (v: IUser | null) => void;
+    dataUpdate: IUser | null;
 }
+
 type FieldType = {
+    id: string;
+    email: string;
     fullName: string;
     password: string;
-    email: string;
     phone: string;
     role: string;
     avatar?: string;
 };
 const { Option } = Select;
-const CreateUser = (props: IProps) => {
-    const { openModalCreate, setOpenModalCreate, refreshTable } = props;
+const UpdateUser = (props: IProps) => {
+    const { openModalUpdate, setOpenModalUpdate, refreshTable, setDataUpdate, dataUpdate } = props;
     const [isSubmit, setIsSubmit] = useState<boolean>(false);
     const { message, notification } = App.useApp();
 
     const [form] = Form.useForm();
+
+    useEffect(() => {
+        if (dataUpdate) {
+            form.setFieldsValue({
+                id: dataUpdate.id,
+                fullName: dataUpdate.fullName,
+                password: dataUpdate.originalPass,
+                email: dataUpdate.email,
+                phone: dataUpdate.phone,
+                role: dataUpdate.role,
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dataUpdate]);
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
-        const { fullName, password, email, phone, role } = values;
+        const { id, fullName, email, password, role, phone } = values;
         setIsSubmit(true);
-        const res = await registerApi(fullName, email, password, phone, role);
+        const res = await updateUserApi(id, email, password, fullName, phone, role);
         setTimeout(() => {
             if (res && res.data && typeof res.data === 'string') {
                 const alertMessage = res.data + '';
@@ -38,14 +56,15 @@ const CreateUser = (props: IProps) => {
                 setIsSubmit(false);
                 return;
             } else {
-                message.success('Create user success!');
+                message.success('Update user success!');
                 form.resetFields();
-                setOpenModalCreate(false);
+                setOpenModalUpdate(false);
                 setIsSubmit(false);
                 refreshTable();
             }
         }, 2000);
     };
+
     const nameRules: Rule[] = [{ required: true, message: 'Name is required' }];
     const emailRules: Rule[] = [
         { required: true, message: 'Email is required' },
@@ -59,27 +78,31 @@ const CreateUser = (props: IProps) => {
     return (
         <>
             <Modal
-                title="Add new user"
-                open={openModalCreate}
+                title="Update user"
+                open={openModalUpdate}
                 onOk={() => {
                     form.submit();
                 }}
                 onCancel={() => {
-                    setOpenModalCreate(false);
+                    setOpenModalUpdate(false);
+                    setDataUpdate(null);
                     form.resetFields();
                 }}
-                okText={'Create'}
-                cancelText="Cancel"
+                okText={'Update'}
+                cancelText={'Cancel'}
                 confirmLoading={isSubmit}
             >
                 <Divider />
                 <Form form={form} name="basic" style={{ maxWidth: 600 }} onFinish={onFinish} autoComplete="off">
+                    <Form.Item<FieldType> hidden labelCol={{ span: 24 }} label="ID" name="id" rules={nameRules}>
+                        <Input placeholder="Enter ID" disabled />
+                    </Form.Item>
                     <Form.Item<FieldType> labelCol={{ span: 24 }} label="Name" name="fullName" rules={nameRules}>
                         <Input placeholder="Enter name" />
                     </Form.Item>
 
                     <Form.Item<FieldType> labelCol={{ span: 24 }} label="Email" name="email" rules={emailRules}>
-                        <Input type="email" placeholder="Enter email" />
+                        <Input type="email" placeholder="Enter email" disabled />
                     </Form.Item>
 
                     <Form.Item<FieldType>
@@ -104,4 +127,4 @@ const CreateUser = (props: IProps) => {
         </>
     );
 };
-export default CreateUser;
+export default UpdateUser;
