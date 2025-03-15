@@ -1,8 +1,10 @@
+import UploadAndPreview from '@/components/UploadImage/UploadImage';
+
 const HomePage = () => {
     return (
         <>
-            Homepage
+            <UploadAndPreview />
         </>
-    )
-}
-export default HomePage
+    );
+};
+export default HomePage;
