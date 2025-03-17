@@ -1,15 +1,12 @@
-import { deleteUserApi, getBooksApi } from '@/services/api';
+import { deleteBookApi, deleteUserApi, getBooksApi } from '@/services/api';
 // import { dateRangeValidate } from '@/services/helper';
-import { CloudUploadOutlined, DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProTable } from '@ant-design/pro-components';
 import { App, Button, Popconfirm } from 'antd';
 import { useRef, useState } from 'react';
-import DetailUser from './detail.book';
-import CreateUser from './create.book';
 // import ImportUser from './data/import.user';
 import { CSVLink } from 'react-csv';
-import UpdateUser from './update.book';
 import dayjs from 'dayjs';
 import DetailBook from './detail.book';
 import CreateBook from './create.book';
@@ -27,17 +24,15 @@ const TableBook = () => {
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IBook | null>(null);
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
-    const [currentDataTable, setCurrentDataTable] = useState<IBook[]>([]);
-    const [openModalImport, setOpenModalImport] = useState<boolean>(false);
+    const [currentDataTable, setCurrentDataTable] = useState<IBook[] | undefined>([]);
+    const [excelData, setExcelData] = useState([]);
     const [dataUpdate, setDataUpdate] = useState<IBook | null>(null);
     const [openModalUpdate, setOpenModalUpdate] = useState<boolean>(false);
     const [isDeleteBook, setIsDeleteBook] = useState<boolean>(false);
     const { message, notification } = App.useApp();
 
     const handleDeleteBook = async (id: string) => {
-        // setIsDeleteUser(false);
-        const res = await deleteUserApi(id);
-        console.log(res);
+        const res = await deleteBookApi(id);
         setTimeout(() => {
             if (res && res.data && typeof res.data === 'string') {
                 const alertMessage = res.data + '';
@@ -48,7 +43,7 @@ const TableBook = () => {
                 setIsDeleteBook(true);
                 return;
             } else {
-                message.success('Delete user success!');
+                message.success('Delete book success!');
                 setIsDeleteBook(false);
                 refreshTable();
             }
@@ -184,6 +179,21 @@ const TableBook = () => {
                     const allBook = await getBooksApi(query);
                     if (allBook && typeof allBook.data !== 'string') {
                         setCurrentDataTable(allBook.data);
+                        if (allBook.data) {
+                            const data = allBook.data;
+                            const result = data.map((item) => {
+                                return {
+                                    id: item.id,
+                                    author: item.author,
+                                    category: item.category,
+                                    mainText: item.mainText,
+                                    price: item.price,
+                                    quantity: item.quantity,
+                                    sold: item.sold,
+                                };
+                            });
+                            setExcelData(result as []);
+                        }
                     }
                     return {
                         data: allBook.data,
@@ -199,20 +209,11 @@ const TableBook = () => {
                 }}
                 headerTitle="Table book"
                 toolBarRender={() => [
-                    <Button icon={<ExportOutlined />} type="primary">
-                        <CSVLink data={currentDataTable} filename="export-user.csv">
+                    <CSVLink data={excelData} filename="export-book.csv">
+                        <Button icon={<ExportOutlined />} type="primary">
                             Export
-                        </CSVLink>
-                    </Button>,
-                    <Button
-                        icon={<CloudUploadOutlined />}
-                        type="primary"
-                        onClick={() => {
-                            setOpenModalImport(true);
-                        }}
-                    >
-                        Import
-                    </Button>,
+                        </Button>
+                    </CSVLink>,
                     <Button
                         key="button"
                         icon={<PlusOutlined />}

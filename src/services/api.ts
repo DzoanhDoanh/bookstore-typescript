@@ -80,7 +80,10 @@ export const deleteUserApi = (id: string) => {
     return axios.delete<IBackendRes<IAuth>>(urlBackend);
 };
 export const getBooksApi = (query: string) => {
-    return axios.get<IBackendRes<IBook>>(`/660/books?_page=1&_limit=100${query}`);
+    return axios.get<IBackendRes<IBook[]>>(`/660/books?_page=1&${query}`);
+};
+export const getBookByIdApi = (id: string) => {
+    return axios.get<IBackendRes<IBook>>(`/660/books/${id}`);
 };
 export const getCategoryApi = () => {
     const urlBackend = `/660/category`;
@@ -112,4 +115,31 @@ export const addBookApi = (
         updateAt: new Date(),
         createAt: new Date(),
     });
+};
+export const updateBookApi = (
+    id: string,
+    thumbnail: string,
+    slider: string[],
+    mainText: string,
+    author: string,
+    price: number,
+    quantity: number,
+    category: string,
+) => {
+    const urlBackend = `/660/books/${id}`;
+    return axios.put<IBackendRes<IBook>>(urlBackend, {
+        thumbnail,
+        slider,
+        mainText,
+        author,
+        price,
+        sold: 10,
+        quantity,
+        category,
+        updateAt: new Date(),
+    });
+};
+export const deleteBookApi = (id: string) => {
+    const urlBackend = `/660/books/${id}`;
+    return axios.delete<IBackendRes<IBook>>(urlBackend);
 };

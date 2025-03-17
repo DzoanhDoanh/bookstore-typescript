@@ -35,6 +35,7 @@ const CreateBook = (props: IProps) => {
     const [previewOpenSlide, setPreviewOpenSlide] = useState(false);
     const [previewImageSlide, setPreviewImageSlide] = useState<string>('');
     const [fileListSlide, setFileListSlide] = useState<any[]>([]);
+    const [form] = Form.useForm();
 
     // Xử lý hiển thị ảnh preview
     const handlePreview = async (file: any) => {
@@ -72,7 +73,6 @@ const CreateBook = (props: IProps) => {
         };
         fetchCategory();
     }, []);
-    const [form] = Form.useForm();
     const onFinish: FormProps<FieldType>['onFinish'] = async (values) => {
         setIsSubmit(true);
         try {
@@ -196,7 +196,7 @@ const CreateBook = (props: IProps) => {
                                     {fileListThumb.length >= 8 ? null : (
                                         <div>
                                             <PlusOutlined />
-                                            <div style={{ marginTop: 8 }}>Chọn file</div>
+                                            <div style={{ marginTop: 8 }}>Select file</div>
                                         </div>
                                     )}
                                 </Upload>
@@ -219,7 +219,7 @@ const CreateBook = (props: IProps) => {
                                     {fileListSlide.length >= 8 ? null : (
                                         <div>
                                             <PlusOutlined />
-                                            <div style={{ marginTop: 8 }}>Chọn file</div>
+                                            <div style={{ marginTop: 8 }}>Select file</div>
                                         </div>
                                     )}
                                 </Upload>
