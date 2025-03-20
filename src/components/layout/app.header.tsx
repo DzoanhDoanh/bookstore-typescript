@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaReact } from 'react-icons/fa';
 import { FiShoppingCart } from 'react-icons/fi';
 import { VscSearchFuzzy } from 'react-icons/vsc';
-import { Divider, Badge, Drawer, Avatar, Popover, App } from 'antd';
+import { Divider, Badge, Drawer, Avatar, Popover, App, Empty, Button } from 'antd';
 import { Dropdown, Space } from 'antd';
 import { useNavigate } from 'react-router';
 import './app.header.scss';
 import { Link } from 'react-router-dom';
 import { useCurrentApp } from 'components/context/app.context';
+import { getCartsApi } from '@/services/api';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
 const AppHeader = (props: any) => {
@@ -15,12 +16,25 @@ const AppHeader = (props: any) => {
 
     const { message } = App.useApp();
 
-    const { isAuthenticated, user, setUser, setIsAuthenticated } = useCurrentApp();
+    const { isAuthenticated, user, setUser, setIsAuthenticated, carts, setCarts } = useCurrentApp();
 
     const navigate = useNavigate();
-
+    useEffect(() => {
+        const fetchCarts = async () => {
+            if (isAuthenticated === true) {
+                const res = await getCartsApi();
+                if (res && res.data) {
+                    setCarts(res.data);
+                }
+            } else {
+                setCarts([]);
+            }
+        };
+        fetchCarts();
+    }, [isAuthenticated]);
     const handleLogout = async () => {
         setUser(null);
+        setCarts([]);
         setIsAuthenticated(false);
         localStorage.removeItem('accessToken');
         message.success('Đăng xuất thành công!');
@@ -29,7 +43,7 @@ const AppHeader = (props: any) => {
     let items = [
         {
             label: (
-                <label style={{ cursor: 'pointer' }} onClick={() => alert('me')}>
+                <label style={{ cursor: 'pointer' }} onClick={() => navigate('/account/1')}>
                     Quản lý tài khoản
                 </label>
             ),
@@ -58,28 +72,30 @@ const AppHeader = (props: any) => {
     const contentPopover = () => {
         return (
             <div className="pop-cart-body">
-                {/* <div className='pop-cart-content'>
+                <div className="pop-cart-content">
                     {carts?.map((book, index) => {
                         return (
-                            <div className='book' key={`book-${index}`}>
-                                <img src={`${import.meta.env.VITE_BACKEND_URL}/images/book/${book?.detail?.thumbnail}`} />
+                            <div className="book" key={`book-${index}`}>
+                                <img src={`${book?.detail?.thumbnail}`} />
                                 <div>{book?.detail?.mainText}</div>
-                                <div className='price'>
-                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(book?.detail?.price ?? 0)}
+                                <div className="price">
+                                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
+                                        book?.detail?.price ?? 0,
+                                    )}
                                 </div>
                             </div>
-                        )
+                        );
                     })}
                 </div>
-                {carts.length > 0 ?
-                    <div className='pop-cart-footer'>
-                        <button onClick={() => navigate('/order')}>Xem giỏ hàng</button>
+                {carts.length > 0 ? (
+                    <div style={{ display: 'flex', gap: 12, marginTop: '20px' }}>
+                        <Button type="primary" onClick={() => navigate('/order')}>
+                            Xem giỏ hàng
+                        </Button>
                     </div>
-                    :
-                    <Empty
-                        description="Không có sản phẩm trong giỏ hàng"
-                    />
-                } */}
+                ) : (
+                    <Empty description="Không có sản phẩm trong giỏ hàng" />
+                )}
             </div>
         );
     };
@@ -126,13 +142,8 @@ const AppHeader = (props: any) => {
                                     content={contentPopover}
                                     arrow={true}
                                 >
-                                    <Badge
-                                        // count={carts?.length ?? 0}
-                                        count={10}
-                                        size={'small'}
-                                        showZero
-                                    >
-                                        <FiShoppingCart className="icon-cart" />
+                                    <Badge count={carts?.length ?? 0} size={'small'} showZero>
+                                        <FiShoppingCart className="icon-cart" onClick={() => navigate('/order')} />
                                     </Badge>
                                 </Popover>
                             </li>

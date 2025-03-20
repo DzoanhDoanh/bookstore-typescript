@@ -57,4 +57,19 @@ declare global {
         id: string;
         categoryName: string;
     }
+    interface ICart {
+        id: string;
+        quantity: number;
+        detail: IBook;
+    }
+    interface IOrder {
+        id: string;
+        userId: string;
+        address: string;
+        detail: ICart[];
+        name: string;
+        phone: string;
+        totalPrice: number;
+        type: string;
+    }
 }

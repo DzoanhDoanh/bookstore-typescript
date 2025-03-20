@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { HashLoader } from 'react-spinners';
-import { getUserByIdApi } from '../../services/api';
+import { getCartsApi, getUserByIdApi } from '../../services/api';
 interface IAppContext {
     isAuthenticated: boolean;
     setIsAuthenticated: (v: boolean) => void;
@@ -9,6 +9,8 @@ interface IAppContext {
     user: IUser | null;
     appLoading: boolean;
     setAppLoading: (v: boolean) => void;
+    carts: ICart[];
+    setCarts: (v: ICart[]) => void;
 }
 interface DecodedToken {
     email: string;
@@ -25,6 +27,7 @@ export const AppProvider = (props: TProps) => {
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [user, setUser] = useState<IUser | null>(null);
     const [appLoading, setAppLoading] = useState<boolean>(true);
+    const [carts, setCarts] = useState<ICart[]>([]);
 
     useEffect(() => {
         const getUserInfo = async () => {
@@ -32,7 +35,9 @@ export const AppProvider = (props: TProps) => {
             if (token) {
                 const decoded: DecodedToken = jwtDecode(token);
                 const res = await getUserByIdApi(decoded.sub);
-                if (res.data) {
+                const cartRes = await getCartsApi();
+                if (res.data && cartRes.data) {
+                    setCarts(cartRes.data);
                     setUser(res.data);
                     setIsAuthenticated(true);
                 }
@@ -57,6 +62,8 @@ export const AppProvider = (props: TProps) => {
                         setUser,
                         appLoading,
                         setAppLoading,
+                        carts,
+                        setCarts,
                     }}
                 >
                     {props.children}

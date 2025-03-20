@@ -80,17 +80,17 @@ export const deleteUserApi = (id: string) => {
     return axios.delete<IBackendRes<IAuth>>(urlBackend);
 };
 export const getBooksApi = (query: string) => {
-    return axios.get<IBackendRes<IBook[]>>(`/660/books?_page=1&${query}`);
+    return axios.get<IBackendRes<IBook[]>>(`/books?_page=1&${query}`);
 };
 export const getBookByIdApi = (id: string) => {
-    return axios.get<IBackendRes<IBook>>(`/660/books/${id}`);
+    return axios.get<IBackendRes<IBook>>(`/books/${id}`);
 };
 export const getCategoryApi = () => {
-    const urlBackend = `/660/category`;
+    const urlBackend = `/category`;
     return axios.get<IBackendRes<ICategory[]>>(urlBackend);
 };
 export const getCategoryByIdApi = (id: string) => {
-    const urlBackend = `/660/category/${id}`;
+    const urlBackend = `/category/${id}`;
     return axios.get<IBackendRes<ICategory>>(urlBackend);
 };
 export const addBookApi = (
@@ -142,4 +142,38 @@ export const updateBookApi = (
 export const deleteBookApi = (id: string) => {
     const urlBackend = `/660/books/${id}`;
     return axios.delete<IBackendRes<IBook>>(urlBackend);
+};
+export const getCartsApi = () => {
+    const urlBackend = `/660/carts`;
+    return axios.get<IBackendRes<ICart[]>>(urlBackend);
+};
+export const addToCartApi = (quantity: number, detail: IBook) => {
+    const urlBackend = `/660/carts`;
+    return axios.post<IBackendRes<ICart>>(urlBackend, { quantity, detail });
+};
+export const deleteCartByIdApi = (id: string) => {
+    const urlBackend = `/660/carts/${id}`;
+    return axios.delete<IBackendRes<ICart>>(urlBackend);
+};
+export const updateQuantityCart = (id: string, quantity: number) => {
+    const urlBackend = `/660/carts/${id}`;
+    return axios.patch<IBackendRes<ICart>>(urlBackend, {
+        quantity,
+    });
+};
+export const postOrderApi = (
+    userId: string,
+    address: string,
+    detail: ICart[],
+    name: string,
+    phone: string,
+    totalPrice: number,
+    type: string,
+) => {
+    const urlBackend = `/660/orders`;
+    return axios.post<IBackendRes<IOrder>>(urlBackend, { userId, address, detail, name, phone, totalPrice, type });
+};
+export const getOrderById = (id: string) => {
+    const urlBackend = `/660/orders/${id}`;
+    return axios.get<IBackendRes<IOrder>>(urlBackend);
 };

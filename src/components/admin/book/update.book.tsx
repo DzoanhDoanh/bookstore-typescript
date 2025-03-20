@@ -191,53 +191,54 @@ const UpdateBook = (props: IProps) => {
                                     addonAfter={'đ'}
                                 />
                             </Form.Item>
-
-                            <Form.Item
-                                label="Thumbnail"
-                                name="thumbnail"
-                                valuePropName="fileList"
-                                getValueFromEvent={normFile}
-                            >
-                                <Upload
-                                    listType="picture-card"
-                                    onPreview={handlePreview}
-                                    onChange={handleChange}
-                                    fileList={fileListThumb}
-                                    beforeUpload={() => false}
-                                    maxCount={1}
-                                    multiple
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Form.Item
+                                    label="Thumbnail"
+                                    name="thumbnail"
+                                    valuePropName="fileList"
+                                    getValueFromEvent={normFile}
                                 >
-                                    {fileListThumb.length >= 8 ? null : (
-                                        <div>
-                                            <PlusOutlined />
-                                            <div style={{ marginTop: 8 }}>Select file</div>
-                                        </div>
-                                    )}
-                                </Upload>
-                            </Form.Item>
+                                    <Upload
+                                        listType="picture-card"
+                                        onPreview={handlePreview}
+                                        onChange={handleChange}
+                                        fileList={fileListThumb}
+                                        beforeUpload={() => false}
+                                        maxCount={1}
+                                        multiple
+                                    >
+                                        {fileListThumb.length >= 8 ? null : (
+                                            <div>
+                                                <PlusOutlined />
+                                                <div style={{ marginTop: 8 }}>Select file</div>
+                                            </div>
+                                        )}
+                                    </Upload>
+                                </Form.Item>
 
-                            <Form.Item
-                                label="Slider Images"
-                                name="slider"
-                                valuePropName="fileList"
-                                getValueFromEvent={normFile}
-                            >
-                                <Upload
-                                    listType="picture-card"
-                                    onPreview={handlePreviewSlide}
-                                    onChange={handleChangeSlide}
-                                    fileList={fileListSlide}
-                                    beforeUpload={() => false}
-                                    multiple
+                                <Form.Item
+                                    label="Slider Images"
+                                    name="slider"
+                                    valuePropName="fileList"
+                                    getValueFromEvent={normFile}
                                 >
-                                    {fileListSlide.length >= 8 ? null : (
-                                        <div>
-                                            <PlusOutlined />
-                                            <div style={{ marginTop: 8 }}>Select file</div>
-                                        </div>
-                                    )}
-                                </Upload>
-                            </Form.Item>
+                                    <Upload
+                                        listType="picture-card"
+                                        onPreview={handlePreviewSlide}
+                                        onChange={handleChangeSlide}
+                                        fileList={fileListSlide}
+                                        beforeUpload={() => false}
+                                        multiple
+                                    >
+                                        {fileListSlide.length >= 8 ? null : (
+                                            <div>
+                                                <PlusOutlined />
+                                                <div style={{ marginTop: 8 }}>Select file</div>
+                                            </div>
+                                        )}
+                                    </Upload>
+                                </Form.Item>
+                            </div>
                         </Col>
                         <Col span={12}>
                             <Form.Item<FieldType> label="Category" name="category" rules={[{ required: true }]}>

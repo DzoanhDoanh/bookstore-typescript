@@ -305,7 +305,7 @@ const HomePage: React.FC = () => {
                         ) : (
                             paginatedBooks.map((book) => (
                                 <Col
-                                    key="1"
+                                    key={book.id}
                                     span={6}
                                     md={6}
                                     xs={12}

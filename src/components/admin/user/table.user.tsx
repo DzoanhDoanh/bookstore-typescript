@@ -151,6 +151,7 @@ const TableUser = () => {
         <>
             <ProTable<IUser, TSearch>
                 columns={columns}
+                scroll={{ x: 1000 }}
                 actionRef={actionRef}
                 cardBordered
                 request={async (params, sort, filter) => {

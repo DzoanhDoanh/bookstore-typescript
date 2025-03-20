@@ -152,6 +152,7 @@ const TableBook = () => {
     return (
         <>
             <ProTable<IBook, TSearch>
+                scroll={{ x: 1000 }}
                 columns={columns}
                 actionRef={actionRef}
                 cardBordered
