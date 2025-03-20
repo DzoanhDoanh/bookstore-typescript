@@ -71,5 +71,6 @@ declare global {
         phone: string;
         totalPrice: number;
         type: string;
+        createAt: string;
     }
 }

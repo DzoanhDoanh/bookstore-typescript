@@ -171,9 +171,22 @@ export const postOrderApi = (
     type: string,
 ) => {
     const urlBackend = `/660/orders`;
-    return axios.post<IBackendRes<IOrder>>(urlBackend, { userId, address, detail, name, phone, totalPrice, type });
+    return axios.post<IBackendRes<IOrder>>(urlBackend, {
+        userId,
+        address,
+        detail,
+        name,
+        phone,
+        totalPrice,
+        type,
+        createAt: new Date(),
+    });
 };
 export const getOrderById = (id: string) => {
     const urlBackend = `/660/orders/${id}`;
     return axios.get<IBackendRes<IOrder>>(urlBackend);
+};
+export const getOrderByUserId = (id: string) => {
+    const urlBackend = `/660/orders?userId=${id}`;
+    return axios.get<IBackendRes<IOrder[]>>(urlBackend);
 };

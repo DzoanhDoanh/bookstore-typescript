@@ -134,7 +134,7 @@ const BookDetail = ({ currentBook }: IProps) => {
                             >
                                 Thêm vào giỏ hàng
                             </Button>
-                            <Button type="primary" icon={<ShoppingCartOutlined />}>
+                            <Button type="primary" icon={<ShoppingCartOutlined />} onClick={() => navigate('/order')}>
                                 Mua ngay
                             </Button>
                         </Col>
