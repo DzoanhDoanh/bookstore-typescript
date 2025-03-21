@@ -186,7 +186,7 @@ export const getOrderById = (id: string) => {
     const urlBackend = `/660/orders/${id}`;
     return axios.get<IBackendRes<IOrder>>(urlBackend);
 };
-export const getOrderByUserId = (id: string) => {
-    const urlBackend = `/660/orders?userId=${id}`;
+export const getOrderByUserId = (id: string, query?: string) => {
+    const urlBackend = `/660/orders?userId=${id}&${query}`;
     return axios.get<IBackendRes<IOrder[]>>(urlBackend);
 };
