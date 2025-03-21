@@ -21,7 +21,7 @@ import {
 import { BookOutlined, FireOutlined, FilterOutlined, FilterTwoTone, ReloadOutlined } from '@ant-design/icons';
 import image from '../../assets/images/thumbnailbook.jpg';
 import '../../styles/home.scss';
-import CurrencyFormatter from '@/components/currencyFormatter/CurrencyFormatter';
+import CurrencyFormatter from '@/components/currencyFormatter/currency.formatter';
 import { getBooksApi, getCategoryApi } from '@/services/api';
 import { useNavigate } from 'react-router-dom';
 

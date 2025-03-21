@@ -1,4 +1,4 @@
-import CurrencyFormatter from '@/components/currencyFormatter/CurrencyFormatter';
+import CurrencyFormatter from '@/components/currencyFormatter/currency.formatter';
 import { FORMAT_DATE_VN } from '@/services/helper';
 import { Descriptions, Divider, Drawer } from 'antd';
 import dayjs from 'dayjs';

@@ -1,7 +1,7 @@
 import { Row, Col, Typography, Rate, Tag, Button, InputNumber, Card, Image, message, Spin } from 'antd';
 import { ArrowLeftOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import CurrencyFormatter from '@/components/currencyFormatter/CurrencyFormatter';
+import CurrencyFormatter from '@/components/currencyFormatter/currency.formatter';
 import { useState } from 'react';
 import { useCurrentApp } from '@/components/context/app.context';
 import { addToCartApi, getCartsApi } from '@/services/api';

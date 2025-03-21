@@ -1,4 +1,4 @@
-import { deleteBookApi, deleteUserApi, getBooksApi } from '@/services/api';
+import { deleteBookApi, getBooksApi } from '@/services/api';
 // import { dateRangeValidate } from '@/services/helper';
 import { DeleteTwoTone, EditTwoTone, ExportOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
@@ -11,7 +11,7 @@ import dayjs from 'dayjs';
 import DetailBook from './detail.book';
 import CreateBook from './create.book';
 import UpdateBook from './update.book';
-import CurrencyFormatter from '@/components/currencyFormatter/CurrencyFormatter';
+import CurrencyFormatter from '@/components/currencyFormatter/currency.formatter';
 
 type TSearch = {
     mainText: string;
@@ -24,6 +24,7 @@ const TableBook = () => {
     const [openViewDetail, setOpenViewDetail] = useState<boolean>(false);
     const [dataViewDetail, setDataViewDetail] = useState<IBook | null>(null);
     const [openModalCreate, setOpenModalCreate] = useState<boolean>(false);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [currentDataTable, setCurrentDataTable] = useState<IBook[] | undefined>([]);
     const [excelData, setExcelData] = useState([]);
     const [dataUpdate, setDataUpdate] = useState<IBook | null>(null);

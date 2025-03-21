@@ -177,7 +177,7 @@ const TableUser = () => {
                     }
                     const allUser = await getUsersApi(query);
                     if (allUser && typeof allUser.data !== 'string') {
-                        setCurrentDataTable(allUser.data);
+                        setCurrentDataTable(allUser.data ?? []);
                     }
                     return {
                         data: allUser.data,

@@ -28,7 +28,7 @@ export const getUserByIdApi = (id: string) => {
 };
 
 export const getUsersApi = (query: string) => {
-    return axios.get<IBackendRes<IUser>>(`/660/users?_page=1&_limit=100${query}`);
+    return axios.get<IBackendRes<IUser[]>>(`/660/users?_page=1&_limit=100${query}`);
 };
 
 export const getAllUsers = () => {
