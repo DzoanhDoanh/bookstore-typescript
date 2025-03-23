@@ -23,15 +23,15 @@ import image from '../../assets/images/thumbnailbook.jpg';
 import '../../styles/home.scss';
 import CurrencyFormatter from '@/components/currencyFormatter/currency.formatter';
 import { getBooksApi, getCategoryApi } from '@/services/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
 const { useBreakpoint } = Grid;
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
+    const [searchTerm] = useOutletContext() as any;
     const [form] = Form.useForm();
-
     const [activeTab, setActiveTab] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
     const [filterVisible, setFilterVisible] = useState(false);
@@ -45,38 +45,48 @@ const HomePage: React.FC = () => {
     const pageSize = 4;
 
     useEffect(() => {
-        const fetchBookData = async () => {
-            try {
-                setLoading(true);
-                form.resetFields();
-                if (activeTab === 'all') {
-                    const bookData = await getBooksApi('');
-                    const categoryData = await getCategoryApi();
-                    if (bookData && bookData.data) {
-                        setLstBookData(bookData.data);
-                    }
-                    if (categoryData && categoryData.data) {
-                        setCategories(categoryData.data);
-                    }
-                    setLoading(false);
-                } else {
-                    const bookData = await getBooksApi(`_limit=8&_sort=${activeTab}&_order=desc`);
-                    const categoryData = await getCategoryApi();
-                    if (bookData && bookData.data) {
-                        setLstBookData(bookData.data);
-                    }
-                    if (categoryData && categoryData.data) {
-                        setCategories(categoryData.data);
-                    }
-                    setLoading(false);
+        fetchBookData();
+    }, [activeTab, searchTerm]);
+
+    const fetchBookData = async () => {
+        try {
+            setLoading(true);
+            form.resetFields();
+            if (activeTab === 'all') {
+                let query = '';
+                if (searchTerm) {
+                    query += `&mainText_like=${searchTerm}`;
                 }
-            } catch (error) {
-                console.log(error);
+                const bookData = await getBooksApi(query);
+                const categoryData = await getCategoryApi();
+                if (bookData && bookData.data) {
+                    setLstBookData(bookData.data);
+                }
+                if (categoryData && categoryData.data) {
+                    setCategories(categoryData.data);
+                }
+
+                setLoading(false);
+            } else {
+                let query = '';
+                if (searchTerm) {
+                    query += `&mainText_like=${searchTerm}`;
+                }
+                const bookData = await getBooksApi(`_limit=8&_sort=${activeTab}&_order=desc${query}`);
+                const categoryData = await getCategoryApi();
+                if (bookData && bookData.data) {
+                    setLstBookData(bookData.data);
+                }
+                if (categoryData && categoryData.data) {
+                    setCategories(categoryData.data);
+                }
                 setLoading(false);
             }
-        };
-        fetchBookData();
-    }, [activeTab]);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        }
+    };
     const handleChangeFilter = (changedValues: any, values: any) => {
         console.log(changedValues, values);
     };

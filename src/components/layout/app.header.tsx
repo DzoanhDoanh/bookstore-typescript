@@ -10,8 +10,11 @@ import { Link } from 'react-router-dom';
 import { useCurrentApp } from 'components/context/app.context';
 import { getCartsApi } from '@/services/api';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
-const AppHeader = (props: any) => {
+interface IProps {
+    searchTerm: string;
+    setSearchTerm: (v: string) => void;
+}
+const AppHeader = (props: IProps) => {
     const [openDrawer, setOpenDrawer] = useState(false);
 
     const { message } = App.useApp();
@@ -126,8 +129,8 @@ const AppHeader = (props: any) => {
                                 className="input-search"
                                 type={'text'}
                                 placeholder="Bạn tìm gì hôm nay"
-                                // value={props.searchTerm}
-                                // onChange={(e) => props.setSearchTerm(e.target.value)}
+                                value={props.searchTerm}
+                                onChange={(e) => props.setSearchTerm(e.target.value)}
                             />
                         </div>
                     </div>

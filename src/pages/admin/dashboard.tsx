@@ -49,7 +49,7 @@ const DashboardPage = () => {
                 ))}
             </Row>
 
-            <Card title="📝 Đơn hàng gần đây" className="mt-8 shadow-xl rounded-xl">
+            <Card title="📝 Đơn hàng gần đây" className="mt-8 shadow-xl rounded-xl" style={{ marginTop: '20px' }}>
                 <Table columns={columns} dataSource={recentOrders} rowKey="id" pagination={false} />
             </Card>
         </div>
